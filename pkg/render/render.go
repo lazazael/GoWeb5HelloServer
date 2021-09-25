@@ -2,6 +2,7 @@ package render
 
 import (
 	"bytes"
+	"github.com/lazazael/GoWeb5HelloServer/pkg/config"
 	"html/template"
 	"log"
 	"net/http"
@@ -11,25 +12,37 @@ import (
 //functions is not built into the templates_functions
 var functions = template.FuncMap{}
 
+var app *config.AppConfig
+
+//NewTemplates sets the config  for the template cache
+func NewTemplates(a *config.AppConfig) {
+	app = a
+}
+
+//RenderTemplate renders the templates using html/template
 func RenderTemplate(w http.ResponseWriter, tmpl string) {
+
+	var tc map[string]*template.Template
+
+	if app.UseCache {
+		tc = app.TemplateCache
+	} else {
+		tc, _ = CreateTemplateCache()
+	}
 
 	/*	_, err := RenderTemplateTest(w)
 		if err != nil {
 			fmt.Println("error getting template cache:", err)
 		}*/
 
-	tc, err := CreateTemplateCache()
-	if err != nil {
-		log.Fatal(err)
-	}
 	t, ok := tc[tmpl]
 	if !ok {
-		log.Fatal(err)
+		log.Fatal("could not get template from template cache")
 	}
 	buf := new(bytes.Buffer)
 	_ = t.Execute(buf, nil)
 
-	_, err = buf.WriteTo(w)
+	_, err := buf.WriteTo(w)
 	if err != nil {
 		log.Println("error wringing template to browser", err)
 	}
