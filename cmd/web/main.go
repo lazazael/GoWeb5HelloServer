@@ -27,20 +27,14 @@ func main() {
 
 	render.NewTemplates(&app)
 
-	http.HandleFunc("/", handlers.Repo.Home)
-	http.HandleFunc("/about", handlers.Repo.About)
-	//http.HandleFunc("/divide", handlers.Divide)
+	fmt.Printf(fmt.Sprintf("Starting app on port %s", portNumber))
 
-	/*
-		http.HandleFunc("/", func (w http.ResponseWriter, r *http.Request){
-			n, err := fmt.Fprintf(w, "Hello,world!")
-			fmt.Println(fmt.Sprintf("Number of bytes written: %d",n))
-			if err != nil{
-				fmt.Println(err)
-			}
-		})
-	*/
+	srv := &http.Server{
+		Addr:    portNumber,
+		Handler: routes(&app),
+	}
 
-	fmt.Println(fmt.Sprintf("Starting app on port %s", portNumber))
-	_ = http.ListenAndServe(portNumber, nil)
+	err = srv.ListenAndServe()
+	log.Fatal(err)
+
 }

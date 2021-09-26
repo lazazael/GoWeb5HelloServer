@@ -2,11 +2,12 @@ package handlers
 
 import (
 	"github.com/lazazael/GoWeb5HelloServer/pkg/config"
+	"github.com/lazazael/GoWeb5HelloServer/pkg/models"
 	"github.com/lazazael/GoWeb5HelloServer/pkg/render"
 	"net/http"
 )
 
-//Repository pattern allows to swap components around the application
+//Repository pattern allows swapping components around the application
 
 //Repository the repository type
 type Repository struct {
@@ -31,12 +32,18 @@ func NewHandlers(r *Repository) {
 //Home is the home page handler
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	//_, _= fmt.Fprintf(w,"This is the home page.")
-	render.RenderTemplate(w, "home.page.tmpl")
+	render.RenderTemplate(w, "home.page.tmpl", &models.TemplateData{})
 }
 
 //About is the about page handler
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "about.page.tmpl")
+	//perform logic
+	stringMap := make(map[string]string)
+	stringMap["test"] = "LoLo again"
+	//send data to the template
+	render.RenderTemplate(w, "about.page.tmpl", &models.TemplateData{
+		StringMap: stringMap,
+	})
 }
 
 /*func Divide(w http.ResponseWriter, r *http.Request) {
