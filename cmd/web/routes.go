@@ -15,6 +15,7 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Use(middleware.CleanPath)
 
 	mux.Use(NoSurf)
+	mux.Use(SessionStateLoad)
 
 	//mux.Use(WriteToConsole)
 

@@ -32,6 +32,7 @@ func NewHandlers(r *Repository) {
 //Home is the home page handler
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	//_, _= fmt.Fprintf(w,"This is the home page.")
+
 	render.RenderTemplate(w, "home.page.tmpl", &models.TemplateData{})
 }
 
